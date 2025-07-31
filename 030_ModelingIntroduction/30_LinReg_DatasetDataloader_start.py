@@ -5,6 +5,8 @@ import pandas as pd
 import torch
 import torch.nn as nn 
 import seaborn as sns
+from torch.utils.data import Dataset, DataLoader
+
 
 #%% data import
 cars_file = 'https://gist.githubusercontent.com/noamross/e5d3e859aa0c794be10b/raw/b999fb4425b54c63cab088c0ce2c0d6ce961a563/cars.csv'
@@ -45,22 +47,41 @@ learning_rate = 0.02
 # test different values of too large 0.1 and too small 0.001
 # best 0.02
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+#%%
+class LinRegDataset(Dataset):
+    def __init__(self, dat_x, dat_y):
+        if len(dat_x) != len(dat_y):
+            raise ValueError('Arrays must be same length')
+        self.x = dat_x
+        self.y = dat_y
 
+    def __getitem__(self, index):
+        return self.x[index], self.y[index]
+    
+    def len(self):
+        return len(self.x)
+
+
+# %%
+
+#%%
+
+dataset = LinRegDataset(X, y_true)
 #%% perform training
 losses = []
 slope, bias = [], []
 NUM_EPOCHS = 1000
 BATCH_SIZE = 2
 for epoch in range(NUM_EPOCHS):
-    for i in range(0, X.shape[0], BATCH_SIZE):
+    for index, (dat_x, dat_y) in enumerate(dataset):
         # optimization
         optimizer.zero_grad()
 
         # forward pass
-        y_pred = model(X[i:i+BATCH_SIZE])
+        y_pred = model(dat_x)
 
         # compute loss
-        loss = loss_fun(y_pred, y_true[i:i+BATCH_SIZE])
+        loss = loss_fun(y_pred, dat_y)
         losses.append(loss.item())
 
         # backprop

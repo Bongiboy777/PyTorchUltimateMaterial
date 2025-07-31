@@ -6,6 +6,9 @@ import numpy as np
 #%% create a tensor
 x = torch.tensor(5.5)
 
+# %%
+
+
 # %% simple calculations
 y = x + 10
 print(y)

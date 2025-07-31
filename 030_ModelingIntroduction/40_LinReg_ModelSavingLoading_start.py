@@ -99,6 +99,7 @@ for epoch in range(number_epochs):
         print(f"Epoch {epoch}, Loss: {loss.data}")
 
 # %% model state dict
+model.state_dict()
 
 # %% save model state dict
 

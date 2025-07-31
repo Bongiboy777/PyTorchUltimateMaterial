@@ -73,16 +73,16 @@ class network():
     def backward(self, xfeatures, diff):
         # dloss_dpred -> dpred_dactivation -> dactivated_hidden -> dhidden_input(wx + b)
 
-        dL_ddiff = 2 * (diff)
+        dL_dpred = 2 * (diff)
         hidden = self.hidden_1(xfeatures)
 
-        dactivation_dhidden = self.activation_derivative(hidden)
+        dpred_dhidden = self.activation_derivative(hidden)
         dhidden_db = 1
         dhidden_dw = xfeatures
 
 
-        dL_db = dhidden_db * dactivation_dhidden * dL_ddiff
-        dL_dw = dhidden_dw * dactivation_dhidden * dL_ddiff
+        dL_db = dhidden_db * dpred_dhidden * dL_dpred
+        dL_dw = dhidden_dw * dpred_dhidden * dL_dpred
 
         return dL_dw, dL_db
         pass
@@ -150,6 +150,13 @@ for i in range(total):
     correct += 1 if y_true == y_pred else 0
 # %% Calculate Accuracy
 acc = correct / total
+f'{acc * 100:.2f}%'
+
+
+# %%
+
+# %%
+
 # %% Baseline Classifier
 from collections import Counter
 Counter(y_test)
